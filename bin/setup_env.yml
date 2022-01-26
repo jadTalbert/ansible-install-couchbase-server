@@ -5,9 +5,9 @@
     tasks:
 
       - name: Check to see if ansible.cfg exists in location -> "{{ansible_config_value}}"
-        stat: 
+        stat:
           path: "{{ansible_config_value}}/ansible.cfg"
-        register: ansible_file_exists 
+        register: ansible_file_exists
 
       - name: Get the current system time in epoch format
         command: date +%s
@@ -25,7 +25,7 @@
         ansible.builtin.file:
           path: "{{ansible_config_value}}/ansible.cfg"
           state: touch
-          
+
       - name: Open ansible.cfg file and create the content
         copy:
           dest: "{{ansible_config_value}}/ansible.cfg"
@@ -47,13 +47,15 @@
           content: |
             #this is the default inventory file
             #for each node in your Couchbase cluster, simply repeat each host entry with the services you want running on the node
-            #make sure you modify the ansible_host attribute and enter your host name or IP address
             couchbase_nodes:
               hosts:
-                host_1:
-                  ansible_host: Your Host Name/IP Address Here
+                myhost1.acme.com:
                   services:
-                    kv
-                    n1ql
-                    index
-
+                    - kv
+                    - n1ql
+                    - index
+                myhost2.acme.com:
+                  services:
+                    - kv
+                    - n1ql
+                    - index

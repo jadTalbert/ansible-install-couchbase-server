@@ -1,0 +1,27 @@
+#this is the default inventory file
+#for each node in your Couchbase cluster, simply repeat each host entry with the services you want running on the node
+#make sure you modify the ansible_host attribute and enter your host name or IP address
+---
+    couchbase_nodes:
+      hosts:
+        ec2-0-0-0-0.compute-1.amazonaws.com:
+          services:
+            - kv
+        ec2-0-0-0-0.compute-1.amazonaws.com:
+          services:
+            - kv
+        ec2-0-0-0-0.compute-1.amazonaws.com:
+          services:
+            - kv
+        ec2-0-0-0-0.compute-1.amazonaws.com:
+          services:
+            - eventing
+            - fts
+        ec2-0-0-0-0.compute-1.amazonaws.com:
+          services:
+            - index
+            - n1ql
+        ec2-0-0-0-0.compute-1.amazonaws.com:
+          services:
+            - index
+            - n1ql

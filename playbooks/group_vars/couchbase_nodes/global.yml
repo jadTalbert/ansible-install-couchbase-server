@@ -1,0 +1,63 @@
+#global variables that are accessible by all playbooks
+---
+  operating_system:
+    update_packages: true
+    ping_nodes: true
+    ntp_server:
+      install: true
+      time_zone: America/New_York
+      ntp_host: pool.ntp.org 
+  couchbase_version:
+    build: couchbase-server-enterprise-7.0.3-amzn2.x86_64.rpm
+    url: https://packages.couchbase.com/releases/7.0.3/couchbase-server-enterprise-7.0.3-amzn2.x86_64.rpm
+    dest_dir: /tmp
+  couchbase_cluster: 
+    name: My Cluster
+    index_storage: plasma
+    memory_quota:
+      data: 512
+      index: 512
+      search: 512
+      analytics: 1024
+      eventing: 512
+    security:
+      admin_user: Administrator
+      admin_pwd: password
+      port: 8091
+      http_protocol: http
+    paths:
+      data: /opt/couchbase/var/lib/couchbase/data
+      index: /opt/couchbase/var/lib/couchbase/index
+      analytics: /opt/couchbase/var/lib/couchbase/analytics
+      eventing: /opt/couchbase/var/lib/couchbase/eventing
+    auto_failover:
+      enabled: true
+      timeout: 120
+    buckets:
+      - name: mybucket
+        type: membase
+        mem_quota: 100
+        replicas: 1
+        compression_mode: passive
+        flush_enabled: 0
+        threads: 3
+        num_replicas: 1
+        eviction_policy: valueOnly
+        conflict_resolution: lww
+
+      - name: anotherBucket
+        type: membase
+        mem_quota: 250
+        replicas: 1
+        compression_mode: passive
+        flush_enabled: 0
+        threads: 3
+        num_replicas: 1
+        eviction_policy: valueOnly
+        conflict_resolution: lww
+    kernel_tuning:
+      is_enabled: true
+      disable_THP: true
+      vm_swappiness: 1
+      ulimits: true
+      network_and_memory: true

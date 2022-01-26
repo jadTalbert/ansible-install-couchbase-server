@@ -1,0 +1,59 @@
+#this configures the environment via the init.yml playbook
+---
+  - hosts: localhost
+    gather_facts: true
+    tasks:
+
+      - name: Check to see if ansible.cfg exists in location -> "{{ansible_config_value}}"
+        stat: 
+          path: "{{ansible_config_value}}/ansible.cfg"
+        register: ansible_file_exists 
+
+      - name: Get the current system time in epoch format
+        command: date +%s
+        register: linux_epoch
+        when: ansible_file_exists.stat.exists
+
+      - name: If ansible.cfg already exists, create a backup of the original file.
+        ansible.builtin.copy:
+          src: "{{ansible_config_value}}/ansible.cfg"
+          dest: "{{ansible_config_value}}/ansible.cfg.bak-{{linux_epoch.stdout}}"
+          mode: "0644"
+        when: ansible_file_exists.stat.exists
+
+      - name: Create new ansible.cfg file in specified directory
+        ansible.builtin.file:
+          path: "{{ansible_config_value}}/ansible.cfg"
+          state: touch
+          
+      - name: Open ansible.cfg file and create the content
+        copy:
+          dest: "{{ansible_config_value}}/ansible.cfg"
+          content: |
+            # ansible.cfg created by ansible-couchbase-installer
+            [defaults]
+            inventory = {{inventory_file_path_value}}/inventory
+            remote_user = {{ssh_user_name}}
+            private_key_file = {{ssh_key_file_path}}
+            host_key_checking = False
+            retry_files_enabled = False
+      - name: Create Inventory File
+        ansible.builtin.file:
+          path: "{{inventory_file_path_value}}/inventory"
+          state: touch
+      - name: Modify Inventory file with default configuration
+        copy:
+          dest: "{{inventory_file_path_value}}/inventory"
+          content: |
+            #this is the default inventory file
+            #for each node in your Couchbase cluster, simply repeat each host entry with the services you want running on the node
+            #make sure you modify the ansible_host attribute and enter your host name or IP address
+            couchbase_nodes:
+              hosts:
+                host_1:
+                  ansible_host: Your Host Name/IP Address Here
+                  services:
+                    kv
+                    n1ql
+                    index
+

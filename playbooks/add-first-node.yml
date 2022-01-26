@@ -1,0 +1,11 @@
+#set up first  data node in the cluster
+---
+  - hosts: couchbase_nodes[0]
+    become: true
+
+    tasks:
+      - name: Initialize First Data node in cluster via ansible loop
+        include_tasks: includes/initialize-first-node-in-cluster.yml
+        loop: "{{hostvars[inventory_hostname].groups.couchbase_nodes}}"
+        when:  hostvars[item].services is search("kv") and first_node is not defined
+

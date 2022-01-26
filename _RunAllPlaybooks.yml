@@ -1,0 +1,11 @@
+# this runs all playbooks in sequential order
+---
+  - import_playbook: playbooks/ping-nodes.yml
+  - import_playbook: playbooks/update-packages.yml
+  - import_playbook: playbooks/install-NTP-server.yml
+  - import_playbook: playbooks/download-couchbase-server.yml
+  - import_playbook: playbooks/install-couchbase-server.yml
+  - import_playbook: playbooks/check-kernel-tuning-settings.yml
+  - import_playbook: playbooks/add-first-node.yml
+  - import_playbook: playbooks/add-nodes.yml
+  - import_playbook: playbooks/rebalance-cluster.yml

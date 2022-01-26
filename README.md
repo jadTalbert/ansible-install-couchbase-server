@@ -27,24 +27,45 @@ Execute ```ansible-playbook bin/init.yml```
   Enter your SSH user name for your Couchbase Cluster  | your SSH user Name
   Enter the full path and name of your SSH key | /path/to/your/sshkey.pem
 
+After completing the prompts, we will create two files ```ansible.cfg``` and ```inventory``` in the specified directories. If these files already exist in the specified directory, we will create a backup of the original file in the format ```ansible.cfg-<epoch-timestamp>``` etc.
+
+
 
 ## Step2:
-Enter the following commands for each file paths that we created for you from the earlier Prompts
+Enter the following commands for each file paths that we created for you from the earlier Prompts to ensure your files have been created and are in the proper directory.
 
 ```ls -l /path/where/we/created/your/ansible.cfg```<br>
 ```ls -l /path/where/we/will/created/your/inventory file ```
 
 Confirm your SSH key exists at the path you entered<br>
-```ls -l /path/to/your/sshkey.pem```
+```ls -l /path/to/your/sshkey.pem```<br>
+* Note: you may have to modify the permissions on your SSH file to connect to your target server(e.g. chmod 400 sshkey.pem)
 
-Open the ```ansible.cfg``` file located in the directory we created for you at the path ```/path/where/we/created/your/ansible.cfg``` and confirm all information is correct. If you need to change any values, you can modify the file directly or re-run the init.yml again and enter the information again.
+
+Open the ```ansible.cfg``` file located in the directory we created for you at the path ```/path/where/we/created/your/ansible.cfg``` and confirm all information is correct. If you need to change any values, you can modify the file directly or re-run the init.yml again to correct any mistakes.
 
 Open the ```inventory``` file located ```/path/where/we/created/your/inventory_file```
 by entering the following command:
 
 ```vi /path/where/we/created/your/inventory_file``` (note: the file name is ```inventory```)
 
-and ensure you have a default set of hosts created for you.
+and ensure you have a default set of hosts created for you. It will look something like this:
+```
+#this is the default inventory file
+#for each node in your Couchbase cluster, simply repeat each host entry with the services you want running on the node
+couchbase_nodes:
+  hosts:
+    myhost1.acme.com:
+      services:
+        - kv
+        - n1ql
+        - index
+    myhost2.acme.com:
+      services:
+        - kv
+        - n1ql
+        - index
+```
 
 ## Step 3:
 Open your inventory file and enter your hostnames/IP Address and their respective Couchbase Service(s). The inventory file uses YAML as do the playbooks, so you will have to pay attention to your spacing as required by YAML.
@@ -71,7 +92,7 @@ The ```global.yml``` file contains all global variables that Ansible will use wh
 ## Step 5:
 To use the default ```global.yml``` configurations, you may leave the file in tact and execute the playbooks without making any additional changes. If you want/need specific configuration, you may change those at anytime.
 
-To install Couchbase to your target nodes, execute the following:
+To install Couchbase to your target nodes, execute the following:<br>
 ```ansible-playbook _RunAllPlaybooks.yml```
 
 NOTE: This will install Couchbase Server on the specified target nodes and it is recommended that you test this a few times in a lower environment to ensure you have your cluster set up as expected.
@@ -80,7 +101,7 @@ NOTE: This will install Couchbase Server on the specified target nodes and it is
 To uninstall Couchbase from the specified target nodes, execute the following:
 ```ansible-playbook playbooks/uninstall/___Uninstall-Couchbase-Server.yml```
 
-NOTE: This will uninstall Couchbase Server from any target node(s) you specify in your ```inventory``` file, so you should pay close attention if you decide to run this playbook! This is handy if you are testing these playbooks and want to modify your configuration without have to uninstall manually.
+NOTE: This will uninstall Couchbase Server from any target node(s) you specify in your ```inventory``` file, so you should pay close attention if you decide to run this playbook! This is handy if you are testing these playbooks and want to modify your configuration without having to uninstall manually.
 
 ## Global Variable Definitions:
 Host Services                | Description
@@ -123,5 +144,4 @@ couchbase_cluster.kernel_tuning.is_enabled  | enable/disable linux kernel tuning
 couchbase_cluster.kernel_tuning.disable_THP  |  enable/disable disable_THP
 couchbase_cluster.kernel_tuning.vm_swappiness  | set vm.vm_swappiness  
 couchbase_cluster.kernel_tuning.ulimits  | set ulimits
-couchbase_cluster.kernel_tuning.network_and_memory  | set network/memory tunings per best practices  
-  |  
+couchbase_cluster.kernel_tuning.network_and_memory  | set network/memory tunings per best practices 

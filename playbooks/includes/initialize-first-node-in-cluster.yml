@@ -10,7 +10,7 @@
           node: "{{hostvars[inventory_hostname].inventory_hostname}}"
 
       - name: yet another fact
-        set_fact:        
+        set_fact:
           base_uri: "{{couchbase_cluster.security.http_protocol}}://{{node}}:{{couchbase_cluster.security.port}}"
 
       - name: set services for this node
@@ -21,10 +21,10 @@
           curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" -v -X POST \
           "{{base_uri}}"/nodes/self/controller/settings \
           -d 'path={{couchbase_cluster.paths.data}}&' \
-          -d 'index_path={{couchbase_cluster.paths.analytics}}&' \
+          -d 'index_path={{couchbase_cluster.paths.index}}&' \
           -d 'cbas_path={{couchbase_cluster.paths.analytics}}&' \
           -d 'eventing_path={{couchbase_cluster.paths.eventing}}&'
-      - name: Rename Node using host name 
+      - name: Rename Node using host name
         command: >-
           curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" -v -X POST "{{base_uri}}"/node/controller/rename \
           -d 'hostname={{node}}'
@@ -42,11 +42,11 @@
         command: >-
           curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" -v -X POST "{{base_uri}}"/settings/web \
           -d 'password={{couchbase_cluster.security.admin_pwd}}&username={{couchbase_cluster.security.admin_user}}&port={{couchbase_cluster.security.port}}'
-        
+
       - name: Play to loop over buckets and include the bucket config REST API call
         include_tasks: includes/bucket-tasks.yml
-        loop: "{{couchbase_cluster.buckets}}" 
-       
+        loop: "{{couchbase_cluster.buckets}}"
+
       - name: Create the Cluster Name
         command: >-
           curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" -v -X POST "{{base_uri}}"/pools/default \

@@ -1,6 +1,6 @@
 #yum-update
 ---
-  - hosts: couchbase_nodes
+  - hosts: all
     become: true
     tasks:
       - name: Install Couchbase Server - Enterprise Edition

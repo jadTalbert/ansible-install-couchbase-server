@@ -46,17 +46,13 @@
           dest: "{{inventory_file_path_value}}/inventory"
           content: |
             #this is the default inventory file
-            #for each node in your Couchbase cluster, simply repeat each host entry with the services you want running on the node
-            ---
-              couchbase_nodes:
-                hosts:
-                  ec2-0-0-0-0.compute-1.amazonaws.com:
-                    services:
-                      - kv
-                      - index
-                      - n1ql
-                  ec2-0-0-0-0.compute-1.amazonaws.com:
-                    services:
-                      - kv
-                      - index
-                      - n1ql
+            #master-host will be the first node you add to the Couchbase cluster. This node must implement the data service(e.g. kv). Other services can also be co-located, but kv must exist for this node
+            [master-host]
+            host1.acme.com services=kv
+
+            #other-hosts are all of the other Couchbase nodes in your cluster(do not include the master-host in this list).You can have services as needed. Each respective hosts has a services host variable in-line with the host name.
+            #you can add/remove services as needed from the services host variables.
+            [other-hosts]
+            host2.acme.com    services=n1ql,index
+            host3.acme.com    services=cbas
+            host4.acme.com    services=fts,eventing

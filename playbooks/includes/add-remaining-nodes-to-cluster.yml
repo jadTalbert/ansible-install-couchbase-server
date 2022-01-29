@@ -1,11 +1,11 @@
 #set up the other  data nodes in the cluster
 ---
 
-
      - name: Add Node to Cluster within an ansible loop using
        command: curl -v -X POST -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" \
-         http://"{{hostvars[hostvars[inventory_hostname].groups.couchbase_nodes[0]].inventory_hostname}}":"{{couchbase_cluster.security.port}}"/controller/addNode \
+         http://{{hostvars[inventory_hostname].groups['master-host'][0]}}:"{{couchbase_cluster.security.port}}"/controller/addNode \
           -d 'hostname=http://{{item}}' \
           -d 'user={{couchbase_cluster.security.admin_user}}' \
           -d 'password={{couchbase_cluster.security.admin_pwd}}' \
-          -d 'services={{hostvars[item].services | join(',')}}'
+          -d 'services={{hostvars[item].services}}'
+

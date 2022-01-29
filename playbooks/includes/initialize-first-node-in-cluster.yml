@@ -4,31 +4,24 @@
 #refernce documentation for auto-failover settings -> https://docs.couchbase.com/server/current/rest-api/rest-cluster-autofailover-enable.html
 #reference documentation for index storage mode -> https://docs.couchbase.com/server/current/rest-api/post-settings-indexes.html
 ---
-# - hosts: couchbase_nodes
-#    become: true
-  
-#    tasks:    
-      - name: first KV noded added to cluster(temp variable used for adding other nodes playbook)
-        set_fact:
-          first_node: "{{hostvars[item].inventory_hostname}}"
 
-      - name: Create loop variables for this playbook
+      - name: set node name
         set_fact:
-          node: "{{hostvars[item].inventory_hostname}}"
+          node: "{{hostvars[inventory_hostname].inventory_hostname}}"
 
-      - name: another varialbe
-        set_fact:
-          services: "{{hostvars[item].services}}"
       - name: yet another fact
         set_fact:        
           base_uri: "{{couchbase_cluster.security.http_protocol}}://{{node}}:{{couchbase_cluster.security.port}}"
 
+      - name: set services for this node
+        set_fact:
+          services: "{{hostvars[inventory_hostname].services}}"
       - name: Initialize First Node In Cluster
         command: >-
           curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" -v -X POST \
           "{{base_uri}}"/nodes/self/controller/settings \
           -d 'path={{couchbase_cluster.paths.data}}&' \
-          -d 'index_path={{couchbase_cluster.paths.index}}&' \
+          -d 'index_path={{couchbase_cluster.paths.analytics}}&' \
           -d 'cbas_path={{couchbase_cluster.paths.analytics}}&' \
           -d 'eventing_path={{couchbase_cluster.paths.eventing}}&'
       - name: Rename Node using host name 
@@ -38,7 +31,7 @@
       - name: Set up Requested Services
         command: >-
           curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" -v -X POST "{{base_uri}}"/node/controller/setupServices \
-          -d 'services={{ services | join(',') }}'
+          -d 'services={{ services }}'
       - name: Set Up Memory Quotas for cluster
         command: >-
           curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" -v -X POST "{{base_uri}}"/pools/default \

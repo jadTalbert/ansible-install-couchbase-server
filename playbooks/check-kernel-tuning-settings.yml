@@ -1,6 +1,6 @@
 #this playbook checks the linux kernel_tuning attribute in the group_vars/ directory to determine if we should configure the couchbase nodes with our best practices
 ---
-  - hosts: couchbase_nodes
+  - hosts: all
     become: true
     tasks:
       - name: Checking Linux Kernel Tunings 

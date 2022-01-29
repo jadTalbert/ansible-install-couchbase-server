@@ -1,6 +1,6 @@
 #download couchbase package
 ---
-  - hosts: couchbase_nodes
+  - hosts: all
     become: true
     tasks:
       - name: Download Couchbase Server Enterprise Edition

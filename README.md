@@ -52,19 +52,18 @@ by entering the following command:
 and ensure you have a default set of hosts created for you. It will look something like this:
 ```
 #this is the default inventory file
-#for each node in your Couchbase cluster, simply repeat each host entry with the services you want running on the node
-couchbase_nodes:
-  hosts:
-    myhost1.acme.com:
-      services:
-        - kv
-        - n1ql
-        - index
-    myhost2.acme.com:
-      services:
-        - kv
-        - n1ql
-        - index
+
+#master-host will be the first node you add to the Couchbase cluster. This node must implement the data service(e.g. kv). Other services can also be co-located, but kv must exist for this node
+[master-host]
+host1.acme.com services=kv
+
+
+#other-hosts are all of the other Couchbase nodes in your cluster(do not include the master-host in this list).You can have services as needed. Each respective hosts has a services host variable in-line with the host name.
+#you can add/remove services as needed from the services host variables.
+[other-hosts]
+host2.acme.com    services=n1ql,index,fts
+host3.acme.com    services=index
+host4.acme.com    services=fts,index,kv,eventing
 ```
 
 ## Step 3:
@@ -85,12 +84,12 @@ backup  | backup service(applies to CB Server 7.x+)
 
 ## Step 4:
 Run the following command:<br>
-```vi playbooks/group_vars/couchbase_nodes/global.yml```
+```vi playbooks/group_vars/all.yml```
 
-The ```global.yml``` file contains all global variables that Ansible will use when running the playbooks. This file allows you to configure your Couchbase cluster, buckets, memory quotas etc. and many other settings within the product. It also specifies settings for many other linux-kernel tunings that will allow your Couchbase cluster to perform better in many situations.
+The ```all.yml``` file contains all global variables that Ansible will use when running the playbooks. This file allows you to configure your Couchbase cluster, buckets, memory quotas etc. and many other settings within the product. It also specifies settings for many other linux-kernel tunings that will allow your Couchbase cluster to perform better in many situations.
 
 ## Step 5:
-To use the default ```global.yml``` configurations, you may leave the file in tact and execute the playbooks without making any additional changes. If you want/need specific configuration, you may change those at anytime.
+To use the default ```all.yml``` configurations, you may leave the file in tact and execute the playbooks without making any additional changes. If you want/need specific configuration, you may change those at anytime.
 
 To install Couchbase to your target nodes, execute the following:<br>
 ```ansible-playbook _RunAllPlaybooks.yml```
@@ -144,4 +143,4 @@ couchbase_cluster.kernel_tuning.is_enabled  | enable/disable linux kernel tuning
 couchbase_cluster.kernel_tuning.disable_THP  |  enable/disable disable_THP
 couchbase_cluster.kernel_tuning.vm_swappiness  | set vm.vm_swappiness  
 couchbase_cluster.kernel_tuning.ulimits  | set ulimits
-couchbase_cluster.kernel_tuning.network_and_memory  | set network/memory tunings per best practices 
+couchbase_cluster.kernel_tuning.network_and_memory  | set network/memory tunings per best practices

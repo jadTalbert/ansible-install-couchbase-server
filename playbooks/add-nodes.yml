@@ -1,10 +1,11 @@
 #set up the other  data nodes in the cluster
 ---
-  - hosts: couchbase_nodes[1:]
+  - hosts: other-hosts[0]
     become: true
 
     tasks:
 
       - name: Add Remaining Nodes to cluster
         include_tasks: includes/add-remaining-nodes-to-cluster.yml
-        loop: "{{hostvars[inventory_hostname].groups.couchbase_nodes}}"
+        loop: "{{hostvars[inventory_hostname].groups['other-hosts']}}" 
+

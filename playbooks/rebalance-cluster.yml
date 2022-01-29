@@ -1,6 +1,6 @@
 #set up the other  data nodes in the cluster
 ---
-  - hosts: couchbase_nodes[0]
+  - hosts: master-host
     become: true
     tasks:
 
@@ -8,7 +8,7 @@
         shell:
           cmd: |
             /opt/couchbase/bin/couchbase-cli rebalance \
-            --cluster {{hostvars[inventory_hostname].groups.couchbase_nodes[0]}} \
+            --cluster {{hostvars[inventory_hostname].groups['master-host'][0]}} \
             --username "{{ couchbase_cluster.security.admin_user }}" \
             --password "{{ couchbase_cluster.security.admin_pwd }}" \
             --no-progress-bar

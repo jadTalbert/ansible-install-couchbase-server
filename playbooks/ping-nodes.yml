@@ -1,6 +1,6 @@
 # this playbook includes a play that pings the nodes in from the inventory group for couchbase_nodes
 ---
-  - hosts: couchbase_nodes
+  - hosts: all
     become: true
     tasks:
       - name: Ping All Nodes in Cluster

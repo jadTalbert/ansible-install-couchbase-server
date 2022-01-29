@@ -1,6 +1,6 @@
 #this playbook checks to see if we need to update the operating system packages using the requisite package managers
 ---
-  - hosts: couchbase_nodes
+  - hosts: all
     become: true
     tasks:
       - name: Update Linux Packages

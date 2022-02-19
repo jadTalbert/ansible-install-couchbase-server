@@ -33,6 +33,11 @@
       - name: Configure vm.swappines to survive a reboot operation(part 3)
         shell: echo "vm.swappiness = {{couchbase_cluster.kernel_tuning.vm_swappiness}}" >> /etc/sysctl.conf
 
+      - name: Set ip_local_port_range parameters
+        shell: echo "32768 60999" >/proc/sys/net/ipv4/ip_local_port_range
+      - name: Configure ip_local_port_range parameters to survive a reboot operation
+        shell: echo "net.ipv4.ip_local_port_range = 32768 60999" >> /etc/sysctl.conf
+ 
       - name: Set the keep-alive interval
         shell: echo 15 > /proc/sys/net/ipv4/tcp_keepalive_intvl
 

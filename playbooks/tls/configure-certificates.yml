@@ -78,9 +78,3 @@
         debug:
           msg: "{{item.stderr_lines}}"
         loop: "{{node_cert_output.results}}"
-
-          # - name: Rename node certificate and private key
-          #shell: |
-          # mv servercertfiles/private/"{{item}}.pem" servercertfiles/private/chain.pem
-          # mv servercertfiles/private/"{{item}}.key" servercertfiles/private/pkey.key
-          #loop: "{{hostvars[inventory_hostname].groups.all}}"

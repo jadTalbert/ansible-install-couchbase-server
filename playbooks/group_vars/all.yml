@@ -6,12 +6,12 @@
     ntp_server:
       install: true
       time_zone: America/New_York
-      ntp_host: pool.ntp.org 
+      ntp_host: pool.ntp.org
   couchbase_version:
     build: couchbase-server-enterprise-7.0.3-amzn2.x86_64.rpm
     url: https://packages.couchbase.com/releases/7.0.3/couchbase-server-enterprise-7.0.3-amzn2.x86_64.rpm
     dest_dir: /tmp
-  couchbase_cluster: 
+  couchbase_cluster:
     name: My Cluster
     index_storage: plasma
     memory_quota:

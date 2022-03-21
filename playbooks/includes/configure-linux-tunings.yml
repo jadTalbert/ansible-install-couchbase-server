@@ -139,7 +139,6 @@
       - name: Configure OS to run the script at boot-time
         shell: sudo chkconfig --add disable-thp      
 
-
       - name: Configure Packet Steering for virtualized envionments
         shell: echo f > /sys/class/net/eth0/queues/rx-0/rps_cpus
       - name: Configure Packet Steering to survive reboots

@@ -10,7 +10,7 @@
           cmd: mkdir -p /opt/couchbase/var/lib/couchbase/inbox/
 
       - name: Loop over all nodes in the inventor file and start the copy process
-        include_tasks: copy-certficates.yml
+        include_tasks: copy-certificates.yml
         loop: "{{hostvars[inventory_hostname].groups.all}}"
 
       - name: Upload Root Cert

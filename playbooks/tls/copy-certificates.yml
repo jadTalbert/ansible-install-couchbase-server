@@ -5,10 +5,8 @@
        ansible.builtin.copy:
          src: servercertfiles/public/{{ansible_host}}.pem
          dest: /opt/couchbase/var/lib/couchbase/inbox/chain.pem
-         when: item == ansible_host
 
      - name: Copy the key files
        ansible.builtin.copy:
          src: servercertfiles/private/{{ansible_host}}.key
          dest: /opt/couchbase/var/lib/couchbase/inbox/pkey.key
-         when: item == ansible_host

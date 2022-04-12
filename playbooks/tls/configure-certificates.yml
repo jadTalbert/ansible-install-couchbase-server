@@ -32,7 +32,7 @@
 
       - name: Create Self-Signed cluster certificate files
         shell: |
-          openssl req -new -x509 -days 3065 -sha256 -key ca.key -out ca.pem -subj "/CA=Couchbase Root CA"
+          openssl req -new -x509 -days 3065 -sha256 -key ca.key -out ca.pem -subj "/CA=Couchbase Root CA/CN=Couchbase Root CA"
         delegate_to: localhost
 
       - name: get the public key information
@@ -55,7 +55,7 @@
         shell: |
           openssl req -new -key servercertfiles/private/"{{item}}.key" \
           -out servercertfiles/requests/"{{item}}.csr" \
-          -subj "/CN=Couchbase Server"
+          -subj "/CN={{item}}"
         loop: "{{hostvars[inventory_hostname].groups.all}}"
 
       - name: Create customized certificate extensions file to add per node constraints to the certificate

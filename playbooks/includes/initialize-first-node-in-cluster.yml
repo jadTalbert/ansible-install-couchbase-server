@@ -37,15 +37,13 @@
           curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" -v -X POST "{{base_uri}}"/pools/default \
           -d 'memoryQuota={{couchbase_cluster.memory_quota.data}}' \
           -d 'indexMemoryQuota={{couchbase_cluster.memory_quota.index}}' \
-          -d 'ftsMemoryQuota={{couchbase_cluster.memory_quota.search}}'
+          -d 'ftsMemoryQuota={{couchbase_cluster.memory_quota.search}}' \
+          -d 'eventingMemoryQuota={{couchbase_cluster.memory_quota.eventing}}' \
+          -d 'cbasMemoryQuota={{couchbase_cluster.memory_quota.analytics}}'
       - name: Set up Administrator Credentials
         command: >-
           curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" -v -X POST "{{base_uri}}"/settings/web \
           -d 'password={{couchbase_cluster.security.admin_pwd}}&username={{couchbase_cluster.security.admin_user}}&port={{couchbase_cluster.security.port}}'
-
-      - name: Play to loop over buckets and include the bucket config REST API call
-        include_tasks: includes/bucket-tasks.yml
-        loop: "{{couchbase_cluster.buckets}}"
 
       - name: Create the Cluster Name
         command: >-

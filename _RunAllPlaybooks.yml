@@ -9,3 +9,4 @@
   - import_playbook: playbooks/add-first-node.yml
   - import_playbook: playbooks/add-nodes.yml
   - import_playbook: playbooks/rebalance-cluster.yml
+  - import_playbook: playbooks/create-buckets.yml

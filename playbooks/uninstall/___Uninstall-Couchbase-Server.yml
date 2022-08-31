@@ -2,41 +2,49 @@
 ---
   - hosts: all
     become: true
-    gather_facts: no
+    gather_facts: yes
     vars_prompt:
       - name: uninstall_couchbase_server
         prompt: "Are you sure you want to uninstall Couchbase Server?(yes/no)"
         default: no
-        confirm: yes 
+        confirm: yes
         private: no
 
       - name: cannot_undo
         prompt: "Uninstalling Couchbase cannot be undone! Are you sure you want to continue?"
         default: no
         private: no
-        when: uninstall_couchbase_server == 'yes'
+        #when: uninstall_couchbase_server == 'yes'
 
     tasks:
       - name: Uninstall Couchbase Server
         action: ping
         when: cannot_undo == 'yes'
+
       - name: stop couchbase server service on each node
         command: systemctl stop couchbase-server
         register: stop_couchbase_server
         when: cannot_undo == 'yes'
-      - name: remove all couchbase application packages
+
+      - name: remove all couchbase application packages(RHEL)
         command: rpm -e couchbase-server
         register: remove_packages
-        when: cannot_undo == 'yes'
+        when: cannot_undo == 'yes' and ansible_os_family != "Debian"
+
+      - name: remove all couchbase application packages(Ubuntu/Debian)
+        command: sudo dpkg -r couchbase-server
+        register: remove_packages
+        when: cannot_undo == 'yes' and ansible_os_family == "Debian"
+
       - name: remove couchbase data and log directories
         command: rm -rf /opt/couchbase
         register: remove_dirs
         when: cannot_undo == 'yes'
-             
-      - debug: 
+
+
+      - debug:
           msg: "{{stop_couchbase_server}}"
-      - debug: 
+      - debug:
           msg: "{{remove_packages}}"
       - debug:
           msg: "{{remove_dirs}}"
-

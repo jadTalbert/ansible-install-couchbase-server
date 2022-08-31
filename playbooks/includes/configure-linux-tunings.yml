@@ -136,8 +136,13 @@
       - name: Make the THP script executable
         shell: sudo chmod 755 /etc/init.d/disable-thp
 
-      - name: Configure OS to run the script at boot-time
-        shell: sudo chkconfig --add disable-thp      
+      - name: Configure OS to run the script at boot-time(RHEL)
+        shell: sudo chkconfig --add disable-thp
+        when: ansible_os_family != "Debian"
+
+      - name: Configure OS to run the script at boot-time(Ubuntu/Debian)
+        shell: sudo update-rc.d disable-thp defaults
+        when: ansible_os_family == "Debian"
 
       - name: Configure Packet Steering for virtualized envionments
         shell: echo f > /sys/class/net/eth0/queues/rx-0/rps_cpus

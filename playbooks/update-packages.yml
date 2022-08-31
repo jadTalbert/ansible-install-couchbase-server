@@ -3,6 +3,6 @@
   - hosts: all
     become: true
     tasks:
-      - name: Update Linux Packages
-        include_tasks: includes/yum-updates.yml
+      - name: Update Linux Packages(Dependent on distribution)
+        include_tasks: includes/yum-or-apt.yml
         when: operating_system.update_packages == true

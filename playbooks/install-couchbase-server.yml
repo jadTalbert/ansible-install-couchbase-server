@@ -3,7 +3,19 @@
   - hosts: all
     become: true
     tasks:
-      - name: Install Couchbase Server - Enterprise Edition
-        yum: 
+      - name: Install Couchbase Server(RHEL) - Enterprise Edition
+        yum:
           name: "{{couchbase_version.dest_dir}}/{{couchbase_version.build}}"
           state: present
+        when: ansible_os_family != "Debian"
+
+      - name: Make sure we avoid missing Ubuntu dependency errors prior to installing Couchbase
+        command: sudo apt-get -f install -y
+        when: ansible_os_family == "Debian"
+
+      #it is sometimes expected that this play will throw errors per Couchbase documentation since we are manually installing the RPM.
+      #the dependency errors are ignored and should be taken care of by the previous play above.
+      - name: Install Couchbase Server(Ubuntu/Debian) - Enterprise Edition
+        command: chdir=/tmp/ dpkg -i ./{{couchbase_version.build}}
+        when: ansible_os_family == "Debian"
+        ignore_errors: true

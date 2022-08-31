@@ -4,12 +4,12 @@
     update_packages: true
     ping_nodes: true
     ntp_server:
-      install: true
+      install: false
       time_zone: America/New_York
       ntp_host: pool.ntp.org
   couchbase_version:
-    build: couchbase-server-enterprise-7.0.3-amzn2.x86_64.rpm
-    url: https://packages.couchbase.com/releases/7.0.3/couchbase-server-enterprise-7.0.3-amzn2.x86_64.rpm
+    build: couchbase-server-enterprise_7.1.0-ubuntu20.04_amd64.deb
+    url: https://packages.couchbase.com/releases/7.1.0/couchbase-server-enterprise_7.1.0-ubuntu20.04_amd64.deb
     dest_dir: /tmp
   couchbase_cluster:
     name: My Cluster
@@ -37,17 +37,6 @@
       - name: mybucket
         type: membase
         mem_quota: 100
-        replicas: 1
-        compression_mode: passive
-        flush_enabled: 0
-        threads: 3
-        num_replicas: 1
-        eviction_policy: valueOnly
-        conflict_resolution: lww
-
-      - name: anotherBucket
-        type: membase
-        mem_quota: 250
         replicas: 1
         compression_mode: passive
         flush_enabled: 0

@@ -9,11 +9,20 @@
          -d 'index_path={{couchbase_cluster.paths.index}}&' \
          -d 'cbas_path={{couchbase_cluster.paths.analytics}}&' \
          -d 'eventing_path={{couchbase_cluster.paths.eventing}}&'
+       register: init_resposne
+
+# This approach should work, but found that it throws an https error when posting over http. This should not happen, so commenting out for future reference.
+#     - name: Add Node to Cluster within an ansible loop using
+#       command: curl -v -X POST -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" \
+#         {{couchbase_cluster.security.http_protocol}}://{{hostvars[inventory_hostname].groups['master-host'][0]}}:"{{couchbase_cluster.security.port}}"/controller/addNode \
+#          -d 'hostname=http://{{item}}' \
+#          -d 'user={{couchbase_cluster.security.admin_user}}' \
+#          -d 'password={{couchbase_cluster.security.admin_pwd}}' \
+#          -d 'services={{hostvars[item].services}}'
+#       register: add_response
 
      - name: Add Node to Cluster within an ansible loop using
        command: curl -v -X POST -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" \
-         http://{{hostvars[inventory_hostname].groups['master-host'][0]}}:"{{couchbase_cluster.security.port}}"/controller/addNode \
-          -d 'hostname=http://{{item}}' \
-          -d 'user={{couchbase_cluster.security.admin_user}}' \
-          -d 'password={{couchbase_cluster.security.admin_pwd}}' \
-          -d 'services={{hostvars[item].services}}'
+         {{hostvars[inventory_hostname].groups['master-host'][0]}}:"{{couchbase_cluster.security.port}}"/controller/addNode \
+          -d 'hostname={{item}}&user={{couchbase_cluster.security.admin_user}}&password={{couchbase_cluster.security.admin_pwd}}&services={{hostvars[item].services}}'
+       register: add_response

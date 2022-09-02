@@ -143,12 +143,3 @@
       - name: Configure OS to run the script at boot-time(Ubuntu/Debian)
         shell: sudo update-rc.d disable-thp defaults
         when: ansible_os_family == "Debian"
-
-      - name: Configure Packet Steering for virtualized envionments
-        shell: echo f > /sys/class/net/eth0/queues/rx-0/rps_cpus
-      - name: Configure Packet Steering to survive reboots
-        shell: echo "" >> /etc/rc.local
-      - name: Configure Packet Steering for virtualized envionments(Part 2)
-        shell: echo "#Set Packet Steering to execute at boot-time" >> /etc/rc.local
-      - name: Configure Packet Steering for virtualized envionments(Part 3)
-        shell: echo "sudo echo f > /sys/class/net/eth0/queues/rx-0/rps_cpus" >> /etc/rc.local

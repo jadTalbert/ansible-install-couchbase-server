@@ -19,3 +19,7 @@
         command: chdir=/tmp/ dpkg -i ./{{couchbase_version.build}}
         when: ansible_os_family == "Debian"
         ignore_errors: true
+
+      - name: Make sure we avoid missing Ubuntu dependency errors prior to installing Couchbase
+        command: sudo apt-get -f install -y
+        when: ansible_os_family == "Debian"

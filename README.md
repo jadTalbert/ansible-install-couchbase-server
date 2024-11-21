@@ -3,6 +3,7 @@
 ## Contributing
 
 If you want to learn more about Git, take a look at the slide deck!
+Adding another line to show multiple commits.
 
 If you're interested in contributing content, please issue a PR(Pull Request) and your changes will be reviewed and considered for merging.
 
